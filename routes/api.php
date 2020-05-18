@@ -24,3 +24,8 @@ Route::resource('posts', 'Post\PostController');
  */
 Route::resource('users', 'User\UserController');
 Route::resource('users.posts', 'User\UserPostController');
+
+Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function() {
+  Route::post('signin', 'SignInController');
+  Route::get('me', 'MeController');
+});
