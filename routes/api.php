@@ -23,3 +23,4 @@ Route::resource('posts', 'Post\PostController');
  * Users
  */
 Route::resource('users', 'User\UserController');
+Route::resource('users.posts', 'User\UserPostController');
