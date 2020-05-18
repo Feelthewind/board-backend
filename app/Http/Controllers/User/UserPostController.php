@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Post;
+namespace App\Http\Controllers\User;
 
-use App\Post;
-use App\Http\Controllers\ApiController;
+use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Http\Request;
 
-class PostController extends ApiController
+class UserPostController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +15,7 @@ class PostController extends ApiController
      */
     public function index()
     {
-      $posts = Post::all();
-
-      return $this->showAll($posts);
+        //
     }
 
     /**
@@ -44,21 +42,21 @@ class PostController extends ApiController
     /**
      * Display the specified resource.
      *
-     * @param  \App\Post $post
+     * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show(User $user)
     {
-        return $this->showOne($post);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
         //
     }
@@ -67,10 +65,10 @@ class PostController extends ApiController
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
         //
     }
@@ -78,10 +76,10 @@ class PostController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
         //
     }
