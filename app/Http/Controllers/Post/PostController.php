@@ -135,13 +135,14 @@ class PostController extends ApiController
       // }
     }
 
-    public function deleteimage(Request $request)
+    public function deleteimages(Request $request)
     {
       // File::delete('uploads/iDalWz0scKSNHGIKkuIYtodjGG0LbSt6G6Ff9vOp.jpeg');
-      
-      // dd($request->image);
-      if(File::exists($request->image)) {
-        File::delete($request->image);
+      $images = $request->images;
+      foreach($images as $image) {
+        if(File::exists($image)) {
+          File::delete($image);
+        }
       }
     }
 

@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
  */
 Route::resource('posts', 'Post\PostController');
 Route::post('uploadimage', 'Post\PostController@uploadimage');
-Route::post('deleteimage', 'Post\PostController@deleteimage');
+Route::post('deleteimages', 'Post\PostController@deleteimages');
 
 /**
  * Users
