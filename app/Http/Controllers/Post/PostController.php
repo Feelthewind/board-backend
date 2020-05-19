@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Post;
 use Storage;
 use File;
 use App\Post;
+use App\PostImage;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 
@@ -41,6 +42,10 @@ class PostController extends ApiController
       $data['user_id'] = auth()->user()->id;
 
       $post = Post::create($data);
+
+      PostImage::whereIn('post_image_path', $request->images)
+        // ->orWhere('post_image_path', '=', $request->images[1])
+        ->update(array('post_id' => $post->id));
 
       return $this->showOne($post, 201);
     }
@@ -109,6 +114,16 @@ class PostController extends ApiController
     {
       $this->checkAuthor($post);
 
+      $images = PostImage::where('post_id', '=', $post->id);
+
+      $images->each(function($item, $key) {
+          if(File::exists('uploads/' . $item->post_image_path)) {
+          File::delete('uploads/' . $item->post_image_path);
+        }
+      });
+
+      PostImage::where('post_id', '=', $post->id)->delete();
+
       $post->delete();
 
       return $this->showOne($post);
@@ -122,8 +137,16 @@ class PostController extends ApiController
      */
     public function uploadimage(Request $request)
     {
+      $data = $request->all();
+      // $data['user_id'] = auth()->user()->id;
+
       $imagePath = Storage::disk('uploads')->put('', $request->image);
-            return response()->json(["url" => '/uploads/' . $imagePath]);
+
+      $postImage = new PostImage;
+      $postImage->post_image_path = $imagePath;
+      $postImage->save();
+      
+      return response()->json(["url" => '/uploads/' . $imagePath]);
       // if ($request->hasFile('image'))
       // {
       //       $file      = $request->file('image');
@@ -140,8 +163,10 @@ class PostController extends ApiController
       // File::delete('uploads/iDalWz0scKSNHGIKkuIYtodjGG0LbSt6G6Ff9vOp.jpeg');
       $images = $request->images;
       foreach($images as $image) {
-        if(File::exists($image)) {
-          File::delete($image);
+        if(File::exists('uploads/' . $image)) {
+          File::delete('uploads/' . $image);
+
+          PostImage::where('post_image_path', $image)->delete();
         }
       }
     }
