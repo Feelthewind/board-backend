@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
  * Posts
  */
 Route::resource('posts', 'Post\PostController');
+Route::post('uploadimage', 'Post\PostController@uploadimage');
 
 /**
  * Users

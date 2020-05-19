@@ -55,6 +55,12 @@ return [
             'visibility' => 'public',
         ],
 
+        'uploads' => [
+          'driver' => 'local',
+          'root' => 'uploads',
+          'url' => 'uploads',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
