@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Post;
 
 use Storage;
+use File;
 use App\Post;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
@@ -132,6 +133,16 @@ class PostController extends ApiController
       //       $file->move(public_path('img'), $picture);
       //       return response()->json(["url" => public_path('img')]);
       // }
+    }
+
+    public function deleteimage(Request $request)
+    {
+      // File::delete('uploads/iDalWz0scKSNHGIKkuIYtodjGG0LbSt6G6Ff9vOp.jpeg');
+      
+      // dd($request->image);
+      if(File::exists($request->image)) {
+        File::delete($request->image);
+      }
     }
 
     protected function checkAuthor(Post $post)
