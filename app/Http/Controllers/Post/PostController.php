@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Post;
 
 use Storage;
 use File;
+use DB;
 use App\Post;
 use App\PostImage;
 use App\Http\Controllers\ApiController;
@@ -34,6 +35,7 @@ class PostController extends ApiController
       $rules = [
         'title' => 'required|string',
         'description' => 'required|string',
+        'image' => 'image'
       ];
 
       $this->validate($request, $rules);
@@ -41,13 +43,19 @@ class PostController extends ApiController
       $data = $request->all();
       $data['user_id'] = auth()->user()->id;
 
-      $post = Post::create($data);
+      try {
+        DB::beginTransaction();
 
-      PostImage::whereIn('post_image_path', $request->images)
-        // ->orWhere('post_image_path', '=', $request->images[1])
-        ->update(array('post_id' => $post->id));
+        $post = Post::create($data);
+        PostImage::whereIn('post_image_path', $request->images)
+         ->update(array('post_id' => $post->id));
 
-      return $this->showOne($post, 201);
+        DB::commit();
+
+        return $this->showOne($post, 201);
+      } catch (\Exception $e) {
+        DB::rollBack();
+      }
     }
 
     /**
@@ -62,17 +70,6 @@ class PostController extends ApiController
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -81,11 +78,13 @@ class PostController extends ApiController
      */
     public function update(Request $request, Post $post)
     {
-      // $rules = [
-      //   'image' => 'image',
-      // ];
+      $rules = [
+        'title' => 'required|string',
+        'description' => 'required|string',
+        'image' => 'image'
+      ];
 
-      // $this->validate($request, $rules);
+      $this->validate($request, $rules);
 
       $this->checkAuthor($post);
 
@@ -137,25 +136,13 @@ class PostController extends ApiController
      */
     public function uploadimage(Request $request)
     {
-      $data = $request->all();
-      // $data['user_id'] = auth()->user()->id;
-
       $imagePath = Storage::disk('uploads')->put('', $request->image);
 
       $postImage = new PostImage;
       $postImage->post_image_path = $imagePath;
       $postImage->save();
       
-      return response()->json(["url" => '/uploads/' . $imagePath]);
-      // if ($request->hasFile('image'))
-      // {
-      //       $file      = $request->file('image');
-      //       $filename  = $file->getClientOriginalName();
-      //       $extension = $file->getClientOriginalExtension();
-      //       $picture   = date('His').'-'.$filename;
-      //       $file->move(public_path('img'), $picture);
-      //       return response()->json(["url" => public_path('img')]);
-      // }
+      return response()->json(["imagePath" => $imagePath]);
     }
 
     public function deleteimages(Request $request)

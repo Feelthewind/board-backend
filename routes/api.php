@@ -17,15 +17,14 @@ use Illuminate\Support\Facades\Route;
 /**
  * Posts
  */
-Route::resource('posts', 'Post\PostController');
+Route::resource('posts', 'Post\PostController', ['except' => ['edit', 'create']]);
 Route::post('uploadimage', 'Post\PostController@uploadimage');
 Route::post('deleteimages', 'Post\PostController@deleteimages');
 
 /**
  * Users
  */
-Route::resource('users', 'User\UserController');
-Route::resource('users.posts', 'User\UserPostController');
+Route::resource('users', 'User\UserController', ['only' => ['store']]);
 
 Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function() {
   Route::post('signin', 'SignInController');

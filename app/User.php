@@ -13,9 +13,6 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
-    const VERIFIED_USER = '1';
-    const UNVERIFIED_USER = '0';
-
     /**
      * The attributes that are mass assignable.
      *
@@ -25,8 +22,6 @@ class User extends Authenticatable implements JWTSubject
         'name', 
         'email', 
         'password',
-        'verified',
-        'verification_token',
     ];
 
     /**
@@ -36,17 +31,6 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $hidden = [
         'password',
-        'remember_token',
-        'verification_token',
-    ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
     ];
 
     /**
@@ -72,16 +56,6 @@ class User extends Authenticatable implements JWTSubject
     public function setEmailAttribute($email)
     {
       $this->attributes['email'] = strtolower($email);
-    }
-
-    public function isVerified()
-    {
-      return $this->verified == User::VERIFIED_USER;
-    }
-
-    public static function generateVerificationCode()
-    {
-      return Str::random(40);
     }
 
     public function posts()
