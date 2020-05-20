@@ -35,7 +35,6 @@ class PostController extends ApiController
       $rules = [
         'title' => 'required|string',
         'description' => 'required|string',
-        'image' => 'image'
       ];
 
       $this->validate($request, $rules);
@@ -81,7 +80,6 @@ class PostController extends ApiController
       $rules = [
         'title' => 'required|string',
         'description' => 'required|string',
-        'image' => 'image'
       ];
 
       $this->validate($request, $rules);
@@ -136,6 +134,11 @@ class PostController extends ApiController
      */
     public function uploadimage(Request $request)
     {
+      $rules = [
+        'image' => 'image|mimes:png,jpg,jpeg,gif'
+      ];
+
+      $this->validate($request, $rules);
       $imagePath = Storage::disk('uploads')->put('', $request->image);
 
       $postImage = new PostImage;
